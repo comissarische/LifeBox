@@ -358,13 +358,7 @@ function mousePressed() {
       max_born = 4;
       min_die = 2;
       max_die = 6;
-
-      shp_slider.setValue(3);
-      min_born_slider.setValue(4);
-      max_born_slider.setValue(4);
-      min_die_slider.setValue(2);
-      max_die_slider.setValue(6);
-      
+     
       status_config = 0;
       setup();
       mouse_done = 1;
@@ -376,12 +370,6 @@ function mousePressed() {
       min_die = 1;
       max_die = 4;
       
-      shp_slider.setValue(4);
-      min_born_slider.setValue(3);
-      max_born_slider.setValue(3);
-      min_die_slider.setValue(1);
-      max_die_slider.setValue(4);
-
       status_config = 0;
       setup();
       mouse_done = 1;
@@ -392,12 +380,6 @@ function mousePressed() {
       max_born = 4;
       min_die = 2;
       max_die = 5;
-      
-      shp_slider.setValue(5);
-      min_born_slider.setValue(3);
-      max_born_slider.setValue(4);
-      min_die_slider.setValue(2);
-      max_die_slider.setValue(5);
 
       status_config = 0;
       setup();
@@ -410,12 +392,6 @@ function mousePressed() {
       min_die = 2;
       max_die = 5;
       
-      shp_slider.setValue(6);
-      min_born_slider.setValue(2);
-      max_born_slider.setValue(2);
-      min_die_slider.setValue(2);
-      max_die_slider.setValue(5);
-
       status_config = 0;
       setup();
       mouse_done = 1;
@@ -778,10 +754,6 @@ class CSlider {
 
   value() {
     return this.svalue;
-  }
-  
-  setValue(newval) {
-    this.svalue = newval;
   }
 
   setScale(sc) {

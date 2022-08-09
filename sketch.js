@@ -26,28 +26,28 @@ let menu_scale = 1;
 // 3 4 4 2 6
 // 6 2 2 2 5
 // 4 3 3 1 4
+// 5 3 4 2 5
 
 function setup() {
-window.addEventListener("load",function() {
-	// Set a timeout...
-	setTimeout(function(){
-		// Hide the address bar!
-		window.scrollTo(0, 1);
-	}, 0);
-});
-
   frameRate(speed);
-  createCanvas(document.documentElement.clientWidth, document.documentElement.clientHeight);
+  createCanvas(
+    document.documentElement.clientWidth,
+    document.documentElement.clientHeight
+  );
   if (shape == 6) {
     cols = floor((width - resolution * 4) / resolution / 3);
     rows = floor((height - resolution * 4) / resolution / 0.867);
+  }
+  if (shape == 5) {
+    cols = floor((width - resolution * 2) / resolution / 1.17);
+    rows = floor((height - resolution * 2) / resolution / 1.17);
   }
   if (shape == 4) {
     cols = floor((width - resolution * 4) / resolution);
     rows = floor((height - resolution * 4) / resolution);
   }
   if (shape == 3) {
-    cols = floor((width - resolution * 4) / resolution / .74);
+    cols = floor((width - resolution * 4) / resolution / 0.74);
     rows = floor((height - resolution * 4) / resolution / 1.74);
   }
   grid = make2DArray(cols, rows);
@@ -64,18 +64,16 @@ window.addEventListener("load",function() {
   max_born_slider = createCSlider(0, 12, max_born);
   min_die_slider = createCSlider(0, 13, min_die);
   max_die_slider = createCSlider(0, 13, max_die);
-
 }
 
 function draw() {
   background(0);
 
   if (shape == 6) {
-
     for (let i = 0; i < cols; i++) {
       for (let j = 0; j < rows; j++) {
         let x = resolution * 4 + i * resolution * 3;
-        let y = resolution * 4 + j * resolution * .867;
+        let y = resolution * 4 + j * resolution * 0.867;
         if (j % 2 == 0) {
           x = resolution * 4 + i * resolution * 3 - resolution * 1.5;
         }
@@ -86,9 +84,36 @@ function draw() {
         }
       }
     }
-
   }
 
+  if (shape == 5) {
+    for (let i = 0; i < cols; i++) {
+      for (let j = 0; j < rows; j++) {
+        let k = 1.17;
+        let x = resolution * 2 + i * resolution * k;
+        let y = resolution * 2 + j * resolution * k;
+        if (grid[i][j] == 1) {
+          fill(0, grid[i][j] * 200, 0);
+          stroke(0);
+          rot = 0;
+          if (i % 2 == 0 && j % 2 == 0) {
+            rot = PI / 2 + PI / 4;
+          }
+          if (i % 2 == 1 && j % 2 == 0) {
+            rot = PI / 4;
+          }
+          if (i % 2 == 0 && j % 2 == 1) {
+            rot = PI + PI / 4;
+          }
+          if (i % 2 == 1 && j % 2 == 1) {
+            rot = 2 * PI - PI / 4;
+          }
+          //rot = (i % 2 ) * PI/2 + PI/2 +PI/4;
+          poly5(x, y, resolution - 1, resolution - 1, rot);
+        }
+      }
+    }
+  }
   if (shape == 4) {
     for (let i = 0; i < cols; i++) {
       for (let j = 0; j < rows; j++) {
@@ -101,14 +126,12 @@ function draw() {
         }
       }
     }
-
   }
 
   if (shape == 3) {
-
     for (let i = 0; i < cols; i++) {
       for (let j = 0; j < rows; j++) {
-        let k = .74;
+        let k = 0.74;
         let x = resolution * 3 + i * resolution * k;
         let y = resolution * 3 + j * resolution * (1 + k);
         if (i % 2 != 0) {
@@ -116,7 +139,7 @@ function draw() {
           x = resolution * 2.74 + i * resolution * k;
         }
         if (floor(i / 2) % 2 != 0) {
-          y = y + resolution * .88;
+          y = y + resolution * 0.88;
         }
         if (grid[i][j] > 0) {
           fill(0, grid[i][j] * 200, 0);
@@ -125,12 +148,10 @@ function draw() {
             polygon(x, y, resolution, 3, 0);
           } else {
             polygon(x, y, resolution, 3, PI);
-
           }
         }
       }
     }
-
   }
 
   let next = make2DArray(cols, rows);
@@ -143,14 +164,13 @@ function draw() {
       let sum = 0;
       let neighbors = countNeighbors(grid, i, j);
 
-      if (state == 0 && (neighbors >= min_born && neighbors <= max_born)) {
+      if (state == 0 && neighbors >= min_born && neighbors <= max_born) {
         next[i][j] = 1;
       } else if (state > 0 && (neighbors <= min_die || neighbors >= max_die)) {
         next[i][j] = 0;
       } else {
         next[i][j] = state;
       }
-
     }
   }
 
@@ -161,11 +181,10 @@ function draw() {
   if (width / 250 > 2 && height / 300 > 2) {
     menu_scale = floor(min(width / 250, height / 300));
   }
-  
+
   scale(menu_scale);
 
   if (status_config) {
-
     fill(200, 200, 200);
     stroke(1);
     rect(0, 0, 250, 300);
@@ -173,50 +192,74 @@ function draw() {
     line(15, 15, 35, 35);
     line(15, 35, 35, 15);
     fill(0);
+    noStroke(50);
     res_slider.position(10, 80);
     res_slider.setScale(menu_scale);
-    text('size', res_slider.x * 2 + res_slider.width, 95);
+    text("size", res_slider.x * 2 + res_slider.width, 95);
     spd_slider.position(10, 105);
     spd_slider.setScale(menu_scale);
-    text('speed', res_slider.x * 2 + spd_slider.width, 120);
+    text("speed", res_slider.x * 2 + spd_slider.width, 120);
     shp_slider.position(10, 130);
     shp_slider.setScale(menu_scale);
-    text(shp_slider.value() + ' corners', shp_slider.x * 2 + shp_slider.width, 145);
+    text(
+      shp_slider.value() + " corners",
+      shp_slider.x * 2 + shp_slider.width,
+      145
+    );
 
     min_born_slider.position(10, 155);
     min_born_slider.setScale(menu_scale);
-    text(min_born_slider.value() + ' min to born', min_born_slider.x * 2 + min_born_slider.width, 170);
+    text(
+      min_born_slider.value() + " min to born",
+      min_born_slider.x * 2 + min_born_slider.width,
+      170
+    );
     max_born_slider.position(10, 180);
     max_born_slider.setScale(menu_scale);
-    text(max_born_slider.value() + ' max to born', max_born_slider.x * 2 + max_born_slider.width, 195);
+    text(
+      max_born_slider.value() + " max to born",
+      max_born_slider.x * 2 + max_born_slider.width,
+      195
+    );
     min_die_slider.position(10, 205);
     min_die_slider.setScale(menu_scale);
-    text(min_die_slider.value() + ' or less to die', min_die_slider.x * 2 + min_die_slider.width, 220);
+    text(
+      min_die_slider.value() + " or less to die",
+      min_die_slider.x * 2 + min_die_slider.width,
+      220
+    );
     max_die_slider.position(10, 230);
     max_die_slider.setScale(menu_scale);
-    text(max_die_slider.value() + ' or more to die', max_die_slider.x * 2 + max_die_slider.width, 245);
+    text(
+      max_die_slider.value() + " or more to die",
+      max_die_slider.x * 2 + max_die_slider.width,
+      245
+    );
     fill(200, 200, 200);
-    stroke(0);
+    stroke(1);
 
-    rect(10, 270, 35, 20);
+    rect(10, 270, 35, 20, 5);
+    noStroke(0);
     fill(0);
     if (go) {
-      text('stop', 16, 283);
+      text("stop", 16, 283);
     } else {
-      text('start', 15, 283);
+      text("start", 15, 283);
     }
 
     fill(200, 200, 200);
-    stroke(0);
-    rect(50, 270, 35, 20);
+    stroke(1);
+    rect(50, 270, 35, 20, 5);
+    noStroke(0);
     fill(0);
-    text('clear', 56, 283);
+    text("clear", 56, 283);
 
     fill(200, 200, 200);
-    stroke(0);
-    rect(90, 270, 35, 20);
+    stroke(1);
+    rect(90, 270, 35, 20, 5);
+    noStroke(0);
     fill(0);
-    text('rand', 96, 283);
+    text("rand", 96, 283);
 
     if (resolution != res_slider.value()) {
       resolution = res_slider.value();
@@ -228,9 +271,9 @@ function draw() {
     }
     if (shape != shp_slider.value()) {
       shape = shp_slider.value();
-      if (shape == 5) {
-        shape = 6;
-      }
+      //if (shape == 5) {
+      //  shape = 6;
+      //}
       res_changed = 1;
     }
     if (min_born != min_born_slider.value()) {
@@ -246,8 +289,9 @@ function draw() {
       max_die = max_die_slider.value();
     }
   } else {
+    //noFill();
     fill(0);
-    stroke(0, 100, 0)
+    stroke(0, 100, 0);
     rect(10, 10, 30, 30);
     rect(15, 17, 20, 1);
     rect(15, 24, 20, 1);
@@ -267,15 +311,12 @@ function draw() {
     }
   }
   pop();
-
 }
 
 function mousePressed() {
-
   let mouse_done = 0;
   let scaleX = mouseX / menu_scale;
   let scaleY = mouseY / menu_scale;
-
 
   // Check if mouse is inside the circle
   let d = dist(scaleX, scaleY, 25, 25);
@@ -287,7 +328,6 @@ function mousePressed() {
     if (scaleX > 10 && scaleX < 45 && scaleY > 270 && scaleY < 290) {
       go = 1 - go;
       mouse_done = 1;
-
     }
     if (scaleX > 50 && scaleX < 85 && scaleY > 270 && scaleY < 290) {
       for (let i = 0; i < cols; i++) {
@@ -296,7 +336,6 @@ function mousePressed() {
         }
       }
       mouse_done = 1;
-
     }
     if (scaleX > 90 && scaleX < 125 && scaleY > 270 && scaleY < 290) {
       for (let i = 0; i < cols; i++) {
@@ -318,11 +357,10 @@ function mousePressed() {
       }
     }
     if (shape == 3) {
-
       let my = mouseY;
-      let k = .74;
+      let k = 0.74;
       x = floor((mouseX - resolution * 3) / resolution / k);
-      if (floor(x / 2) % 2 != 0) my = my - resolution * .88;
+      if (floor(x / 2) % 2 != 0) my = my - resolution * 0.88;
 
       y = floor((my - resolution * 3) / resolution / (1 + k));
       //console.log(x);
@@ -333,8 +371,7 @@ function mousePressed() {
 
       for (let i = x - 3; i <= x + 3; i++) {
         for (let j = y - 3; j <= y + 3; j++) {
-
-          let k = .74;
+          let k = 0.74;
           let nx = resolution * 3 + i * resolution * k;
           let ny = resolution * 3 + j * resolution * (1 + k);
           if (i % 2 != 0) {
@@ -342,7 +379,7 @@ function mousePressed() {
             nx = resolution * 2.74 + i * resolution * k;
           }
           if (floor(i / 2) % 2 != 0) {
-            ny = ny + resolution * .88;
+            ny = ny + resolution * 0.88;
           }
 
           let ndist = dist(mouseX, mouseY, nx, ny);
@@ -361,12 +398,20 @@ function mousePressed() {
       }
     }
     if (shape == 6) {
-      y = round((mouseY - resolution * 4) / resolution / .867);
+      y = round((mouseY - resolution * 4) / resolution / 0.867);
       if (y % 2 == 0) {
         x = round((mouseX - resolution * 2.5) / resolution / 3);
       } else {
         x = round((mouseX - resolution * 4) / resolution / 3);
       }
+
+      if (x >= 0 && x < cols && y >= 0 && y < rows) {
+        grid[x][y] = 1 - grid[x][y];
+      }
+    }
+    if (shape == 5) {
+      y = round((mouseY - resolution * 2) / resolution / 1.2);
+      x = round((mouseX - resolution * 2) / resolution / 1.2);
 
       if (x >= 0 && x < cols && y >= 0 && y < rows) {
         grid[x][y] = 1 - grid[x][y];
@@ -379,15 +424,12 @@ function countNeighbors(grid, x, y) {
   let sum = 0;
 
   if (shape == 6) {
-
-
     if (y % 2 == 0) {
       for (let i = -1; i < 1; i++) {
         for (let j = -2; j < 3; j++) {
           let col = (x + i + cols) % cols;
           let row = (y + j + rows) % rows;
-          if (!(j % 2 == 0) || i > -1)
-            sum += grid[col][row];
+          if (!(j % 2 == 0) || i > -1) sum += grid[col][row];
         }
       }
     } else {
@@ -395,8 +437,7 @@ function countNeighbors(grid, x, y) {
         for (let j = -2; j < 3; j++) {
           let col = (x + i + cols) % cols;
           let row = (y + j + rows) % rows;
-          if (!(j % 2 == 0) || i < 1)
-            sum += grid[col][row];
+          if (!(j % 2 == 0) || i < 1) sum += grid[col][row];
         }
       }
     }
@@ -412,15 +453,44 @@ function countNeighbors(grid, x, y) {
     }
   }
 
+  if (shape == 5) {
+    for (let i = -1; i < 2; i++) {
+      for (let j = -1; j < 2; j++) {
+        let col = (x + i + cols) % cols;
+        let row = (y + j + rows) % rows;
+        sum += grid[col][row];
+      }
+    }
+    let delta = 0;
+    if (x % 2 == 0 && y % 2 == 0) {
+      delta = grid[(x + 1 + cols) % cols][(y + 1 + rows) % rows];
+    }
+    if (x % 2 == 1 && y % 2 == 0) {
+      delta = grid[(x + 1 + cols) % cols][(y - 1 + rows) % rows];
+    }
+    if (x % 2 == 0 && y % 2 == 1) {
+      delta = grid[(x - 1 + cols) % cols][(y + 1 + rows) % rows];
+    }
+    if (x % 2 == 1 && y % 2 == 1) {
+      delta = grid[(x - 1 + cols) % cols][(y - 1 + rows) % rows];
+    }
+    sum -= delta;
+  }
 
   if (shape == 3) {
-
     if (x % 4 == 2) {
       for (let i = -2; i < 4; i++) {
         for (let j = -1; j < 2; j++) {
           let col = (x + i + cols) % cols;
           let row = (y + j + rows) % rows;
-          if ((i == -2 && j > -1) || (i == -1) || (i == 2 && j > -1) || (i == 0) || (i == 1 && j < 1) || (i == 3 && j == 0))
+          if (
+            (i == -2 && j > -1) ||
+            i == -1 ||
+            (i == 2 && j > -1) ||
+            i == 0 ||
+            (i == 1 && j < 1) ||
+            (i == 3 && j == 0)
+          )
             sum += grid[col][row];
         }
       }
@@ -430,7 +500,14 @@ function countNeighbors(grid, x, y) {
         for (let j = -2; j < 2; j++) {
           let col = (x + i + cols) % cols;
           let row = (y + j + rows) % rows;
-          if ((i == -2 && j > -2 && j < 1) || (i == -1 && j < 1 && j > -3) || (i == 2 && j > -2 && j < 1) || (i == 0 && j > -2) || (i == 1 && j > -2 && j < 1) || (i == 3 && j == -1))
+          if (
+            (i == -2 && j > -2 && j < 1) ||
+            (i == -1 && j < 1 && j > -3) ||
+            (i == 2 && j > -2 && j < 1) ||
+            (i == 0 && j > -2) ||
+            (i == 1 && j > -2 && j < 1) ||
+            (i == 3 && j == -1)
+          )
             sum += grid[col][row];
         }
       }
@@ -440,7 +517,14 @@ function countNeighbors(grid, x, y) {
         for (let j = -1; j < 3; j++) {
           let col = (x + i + cols) % cols;
           let row = (y + j + rows) % rows;
-          if ((i == -2 && j > -1 && j < 2) || (i == -1 && j < 2 && j > -1) || (i == 2 && j > -1 && j < 2) || (i == 0 && j < 2) || (i == 1 && j > -1 && j < 3) || (i == -3 && j == 1))
+          if (
+            (i == -2 && j > -1 && j < 2) ||
+            (i == -1 && j < 2 && j > -1) ||
+            (i == 2 && j > -1 && j < 2) ||
+            (i == 0 && j < 2) ||
+            (i == 1 && j > -1 && j < 3) ||
+            (i == -3 && j == 1)
+          )
             sum += grid[col][row];
         }
       }
@@ -450,14 +534,19 @@ function countNeighbors(grid, x, y) {
         for (let j = -1; j < 2; j++) {
           let col = (x + i + cols) % cols;
           let row = (y + j + rows) % rows;
-          if ((i == 2 && j < 1) || (i == 1) || (i == -2 && j > -2 && j < 1) || (i == 0) || (i == -1 && j > -1) || (i == -3 && j == 0))
+          if (
+            (i == 2 && j < 1) ||
+            i == 1 ||
+            (i == -2 && j > -2 && j < 1) ||
+            i == 0 ||
+            (i == -1 && j > -1) ||
+            (i == -3 && j == 0)
+          )
             sum += grid[col][row];
         }
       }
     }
-
   }
-
 
   sum -= grid[x][y];
   return sum;
@@ -471,6 +560,30 @@ function polygon(x, y, radius, npoints, rotate = 0) {
     let sy = y + sin(a + rotate) * radius;
     vertex(sx, sy);
   }
+  endShape(CLOSE);
+}
+
+function poly5(x, y, radius, npoints, rotate = 0) {
+  let angle = TWO_PI / 6;
+  beginShape();
+  for (let a = 0; a <= 3; a++) {
+    let sx = 0;
+    let sy = 0;
+    if (a == 1) {
+      sx = x + cos(a * angle * 1.08 + rotate) * radius * 0.9;
+      sy = y + sin(a * angle * 1.08 + rotate) * radius * 0.9;
+    } else if (a == 2) {
+      sx = x + cos(a * angle * 0.92 + rotate) * radius * 0.9;
+      sy = y + sin(a * angle * 0.92 + rotate) * radius * 0.9;
+    } else {
+      sx = x + (cos(a * angle + rotate) * radius) / 1.2;
+      sy = y + (sin(a * angle + rotate) * radius) / 1.2;
+    }
+    vertex(sx, sy);
+  }
+  let sx = x + (cos(3 * angle + PI / 2 + rotate) * radius) / 2;
+  let sy = y + (sin(3 * angle + PI / 2 + rotate) * radius) / 2;
+  vertex(sx, sy);
   endShape(CLOSE);
 }
 
@@ -514,12 +627,24 @@ class CSlider {
       this.locked = false;
     }
     if (this.locked) {
-      this.newspos = constrain(mouseX / this.scale - this.height / 2, this.sposMin, this.sposMax);
-      this.svalue = this.vmin + (this.vmax - this.vmin) * ((this.newspos - this.sposMin) / (this.sposMax - this.sposMin));
+      this.newspos = constrain(
+        mouseX / this.scale - this.height / 2,
+        this.sposMin,
+        this.sposMax
+      );
+      this.svalue =
+        this.vmin +
+        (this.vmax - this.vmin) *
+          ((this.newspos - this.sposMin) / (this.sposMax - this.sposMin));
       if (this.vstep > 0) {
-        this.svalue = this.vmin + round((this.svalue - this.vmin) / this.vstep) * this.vstep;
+        this.svalue =
+          this.vmin +
+          round((this.svalue - this.vmin) / this.vstep) * this.vstep;
       }
-      this.newspos = this.x + (this.width - this.height) * ((this.svalue - this.vmin) / (this.vmax - this.vmin));
+      this.newspos =
+        this.x +
+        (this.width - this.height) *
+          ((this.svalue - this.vmin) / (this.vmax - this.vmin));
     }
     if (abs(this.newspos - this.spos) > 1) {
       this.spos = this.spos + (this.newspos - this.spos) / this.loose;
@@ -527,8 +652,12 @@ class CSlider {
   }
 
   overEvent() {
-    if (mouseX / this.scale > this.x && mouseX / this.scale < this.x + this.width &&
-      mouseY / this.scale > this.y && mouseY / this.scale < this.y + this.height) {
+    if (
+      mouseX / this.scale > this.x &&
+      mouseX / this.scale < this.x + this.width &&
+      mouseY / this.scale > this.y &&
+      mouseY / this.scale < this.y + this.height
+    ) {
       return true;
     } else {
       return false;
@@ -536,8 +665,7 @@ class CSlider {
   }
 
   display() {
-    noStroke();
-    fill(204);
+    fill(255);
     rect(this.x, this.y, this.width, this.height);
     if (this.over || this.locked) {
       fill(0, 0, 0);
@@ -565,14 +693,20 @@ class CSlider {
     this.x = xp;
     this.y = yp;
     if (this.vstep > 0) {
-      this.svalue = this.vmin + round((this.svalue - this.vmin) / this.vstep) * this.vstep;
+      this.svalue =
+        this.vmin + round((this.svalue - this.vmin) / this.vstep) * this.vstep;
     }
-    this.spos = this.x + (this.width - this.height) * ((this.svalue - this.vmin) / (this.vmax - this.vmin));
+    this.spos =
+      this.x +
+      (this.width - this.height) *
+        ((this.svalue - this.vmin) / (this.vmax - this.vmin));
     //console.log(this.smin);
     this.newspos = this.spos;
     this.sposMin = this.x;
     this.sposMax = this.x + this.width - this.height;
+    push();
     this.update();
     this.display();
+    pop();
   }
 }

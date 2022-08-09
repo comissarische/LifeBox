@@ -1,6 +1,6 @@
 # LifeBox
 
-Convay's game of life sandbox on p5.js with different grids
+Conway's game of life sandbox on p5.js with different grids
 
 Best settings:
 

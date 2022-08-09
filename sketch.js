@@ -260,6 +260,33 @@ function draw() {
     noStroke(0);
     fill(0);
     text("rand", 96, 283);
+    
+    text("Presets:", 10, 65);
+    fill(200, 200, 200);
+    stroke(1);
+    rect(70, 50, 20, 20, 5);
+    noStroke(0);
+    fill(0);
+    text("3", 77, 65);
+    fill(200, 200, 200);
+    stroke(1);
+    rect(100, 50, 20, 20, 5);
+    noStroke(0);
+    fill(0);
+    text("4", 107, 65);
+    fill(200, 200, 200);
+    stroke(1);
+    rect(130, 50, 20, 20, 5);
+    noStroke(0);
+    fill(0);
+    text("5", 137, 65);
+    fill(200, 200, 200);
+    stroke(1);
+    rect(160, 50, 20, 20, 5);
+    noStroke(0);
+    fill(0);
+    text("6", 167, 65);
+
 
     if (resolution != res_slider.value()) {
       resolution = res_slider.value();
@@ -325,6 +352,74 @@ function mousePressed() {
     mouse_done = 1;
   }
   if (status_config == 1) {
+    if (scaleX > 70 && scaleX < 90 && scaleY > 50 && scaleY < 70) {
+      shape = 3;
+      min_born = 4;
+      max_born = 4;
+      min_die = 2;
+      max_die = 6;
+
+      shp_slider.setValue(3);
+      min_born_slider.setValue(4);
+      max_born_slider.setValue(4);
+      min_die_slider.setValue(2);
+      max_die_slider.setValue(6);
+      
+      status_config = 0;
+      setup();
+      mouse_done = 1;
+    }
+    if (scaleX > 100 && scaleX < 120 && scaleY > 50 && scaleY < 70) {
+      shape = 4;
+      min_born = 3;
+      max_born = 3;
+      min_die = 1;
+      max_die = 4;
+      
+      shp_slider.setValue(4);
+      min_born_slider.setValue(3);
+      max_born_slider.setValue(3);
+      min_die_slider.setValue(1);
+      max_die_slider.setValue(4);
+
+      status_config = 0;
+      setup();
+      mouse_done = 1;
+    }
+    if (scaleX > 130 && scaleX < 150 && scaleY > 50 && scaleY < 70) {
+      shape = 5;
+      min_born = 3;
+      max_born = 4;
+      min_die = 2;
+      max_die = 5;
+      
+      shp_slider.setValue(5);
+      min_born_slider.setValue(3);
+      max_born_slider.setValue(4);
+      min_die_slider.setValue(2);
+      max_die_slider.setValue(5);
+
+      status_config = 0;
+      setup();
+      mouse_done = 1;
+    }
+    if (scaleX > 160 && scaleX < 180 && scaleY > 50 && scaleY < 70) {
+      shape = 6;
+      min_born = 2;
+      max_born = 2;
+      min_die = 2;
+      max_die = 5;
+      
+      shp_slider.setValue(6);
+      min_born_slider.setValue(2);
+      max_born_slider.setValue(2);
+      min_die_slider.setValue(2);
+      max_die_slider.setValue(5);
+
+      status_config = 0;
+      setup();
+      mouse_done = 1;
+    }
     if (scaleX > 10 && scaleX < 45 && scaleY > 270 && scaleY < 290) {
       go = 1 - go;
       mouse_done = 1;
@@ -683,6 +778,10 @@ class CSlider {
 
   value() {
     return this.svalue;
+  }
+  
+  setValue(newval) {
+    this.svalue = newval;
   }
 
   setScale(sc) {
